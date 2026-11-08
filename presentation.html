@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Даниил Смирнов — Senior Automation QA</title>
+<style>
+  :root{
+    --bg:#0a0c0f;
+    --ink:#f1f4ef;
+    --muted:#98a1a6;
+    --line:rgba(255,255,255,.1);
+    --accent:#cdf75f;
+    --accent2:#6fdcff;
+    --mono:"Cascadia Code","JetBrains Mono",Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Segoe UI Variable Display","Segoe UI",Inter,system-ui,-apple-system,sans-serif;
+    overflow:hidden;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:
+      radial-gradient(900px 620px at 88% -12%,rgba(205,247,95,.075),transparent 62%),
+      radial-gradient(760px 520px at -6% 108%,rgba(111,220,255,.06),transparent 62%),
+      linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px) 0 0/72px 72px,
+      linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px) 0 0/72px 72px;
+  }
+
+  .topbar{
+    position:fixed;top:0;left:0;right:0;z-index:5;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:22px 34px;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+  }
+  .topbar b{color:var(--ink);font-weight:500}
+  .topbar .sep{color:rgba(255,255,255,.25);margin:0 10px}
+
+  .slide{
+    position:fixed;inset:0;z-index:1;
+    display:flex;align-items:center;justify-content:center;
+    padding:72px 6vw 64px;
+    opacity:0;visibility:hidden;
+    transform:translateY(22px);
+    transition:opacity .45s ease,transform .55s cubic-bezier(.2,.75,.2,1),visibility .45s;
+  }
+  .slide.is-active{opacity:1;visibility:visible;transform:none}
+  .slide-inner{width:min(1180px,100%);position:relative;z-index:1}
+  .slide.is-active .slide-inner{animation:rise .6s cubic-bezier(.2,.75,.2,1) both}
+  @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+  .kicker{
+    display:flex;align-items:center;gap:12px;
+    font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:22px;
+  }
+  .kicker::before{content:"";width:26px;height:1px;background:var(--accent);opacity:.7}
+  .kicker.dim{color:var(--muted)}
+  .kicker.dim::before{background:var(--muted)}
+
+  h1{
+    font-size:clamp(58px,9.2vw,132px);
+    line-height:.92;letter-spacing:-.045em;font-weight:650;
+  }
+  h1 span{color:var(--accent)}
+  h2{
+    font-size:clamp(30px,4.2vw,56px);
+    line-height:1.02;letter-spacing:-.03em;font-weight:650;
+  }
+  .lead{
+    margin-top:28px;max-width:64ch;
+    font-size:clamp(16px,1.55vw,21px);line-height:1.55;color:var(--muted);
+  }
+  .lead b{color:var(--ink);font-weight:600}
+
+  /* cover */
+  .cover-mark{
+    position:fixed;right:-3vw;bottom:-9vh;z-index:0;
+    font-size:30vw;line-height:1;font-weight:800;letter-spacing:-.06em;
+    color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.055);
+    pointer-events:none;user-select:none;
+  }
+  .cover .lead{max-width:58ch}
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:38px}
+  .chip{
+    display:inline-flex;align-items:center;gap:9px;
+    padding:9px 14px;border:1px solid var(--line);border-radius:999px;
+    font-size:13px;color:var(--ink);background:rgba(255,255,255,.018);
+  }
+  .chip::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
+  .contact-row{
+    display:flex;flex-wrap:wrap;gap:26px;margin-top:54px;
+    font-family:var(--mono);font-size:12px;color:var(--muted);
+  }
+  .contact-row a{color:var(--muted);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.14);padding-bottom:2px}
+  .contact-row a:hover{color:var(--accent);border-color:var(--accent)}
+
+  /* stats */
+  .stats{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+    margin-top:42px;border-top:1px solid var(--line);
+  }
+  .stat{padding:28px 24px 0 0;border-right:1px solid var(--line)}
+  .stat:last-child{border-right:0}
+  .stat + .stat{padding-left:24px}
+  .stat b{
+    display:block;font-size:clamp(34px,4.3vw,60px);line-height:1;letter-spacing:-.045em;
+    color:var(--accent);font-weight:650;font-variant-numeric:tabular-nums;white-space:nowrap;
+  }
+  .stat span{display:block;margin-top:12px;font-size:13px;line-height:1.45;color:var(--muted);max-width:22ch}
+  .note{
+    display:flex;gap:14px;margin-top:34px;padding-top:22px;border-top:1px solid var(--line);
+    font-size:14px;color:var(--muted);
+  }
+  .note b{color:var(--ink);font-weight:600}
+  .note .label{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent2);white-space:nowrap;padding-top:3px}
+
+  /* jobs */
+  .job{display:grid;grid-template-columns:290px minmax(0,1fr);gap:5vw;align-items:start}
+  .job-meta .company{font-size:clamp(24px,2.6vw,36px);font-weight:650;letter-spacing:-.02em;margin-top:2px}
+  .job-meta .role{color:var(--accent);font-size:15px;font-weight:600;margin-top:8px}
+  .job-meta .period{font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:24px;line-height:1.7}
+  .job-meta .period b{display:block;color:var(--ink);font-weight:500}
+  .job-meta .projects{font-size:12.5px;line-height:1.6;color:var(--muted);margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+  .points{list-style:none;border-top:1px solid var(--line)}
+  .points li{
+    position:relative;padding:13px 0 13px 24px;border-bottom:1px solid var(--line);
+    font-size:clamp(14px,1.2vw,16.5px);line-height:1.55;color:var(--muted);
+  }
+  .points li::before{
+    content:"";position:absolute;left:2px;top:21px;width:7px;height:7px;
+    border:1px solid var(--accent);border-radius:1px;transform:rotate(45deg);
+  }
+  .points strong{color:var(--ink);font-weight:600}
+
+  /* skills */
+  .skill-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px 60px;margin-top:40px}
+  .skill-group h3{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--accent);font-weight:500;padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:16px;
+  }
+  .tags{display:flex;flex-wrap:wrap;gap:8px}
+  .tag{
+    padding:7px 11px;border:1px solid var(--line);border-radius:7px;
+    font-size:13px;color:var(--ink);background:rgba(255,255,255,.02);
+  }
+  .skill-foot{margin-top:30px;font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.08em}
+
+  /* workflow */
+  .flow{display:grid;grid-template-columns:repeat(4,1fr);margin-top:46px;border-top:1px solid var(--line)}
+  .step{position:relative;display:flex;flex-direction:column;padding:24px 26px 0 0;border-right:1px solid var(--line)}
+  .step + .step{padding-left:26px}
+  .step:last-child{border-right:0;padding-right:0}
+  .step .num{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .step .num b{color:var(--accent);font-weight:500;margin-right:6px}
+  .step h3{font-size:clamp(17px,1.35vw,20px);letter-spacing:-.01em;margin:12px 0 9px;line-height:1.25}
+  .step p{font-size:13.5px;line-height:1.55;color:var(--muted);margin-bottom:16px}
+  .step .result{margin-top:auto;padding-top:12px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11.5px;color:var(--accent);letter-spacing:.02em}
+
+  /* github */
+  .gh{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:5vw;align-items:start;margin-top:36px}
+  .repo{
+    border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.025);
+    padding:24px;font-size:14px;
+  }
+  .repo-head{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--muted);padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:16px}
+  .repo-head .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+  .repo-head b{color:var(--ink);font-weight:500}
+  .repo-head a{color:var(--muted);text-decoration:none}
+  .repo-head a:hover{color:var(--accent)}
+  .repo p{color:var(--muted);line-height:1.55;font-size:13.5px}
+  .repo-meta{display:flex;flex-wrap:wrap;gap:7px;margin:18px 0}
+  .repo-meta span{font-family:var(--mono);font-size:10px;color:var(--muted);border:1px solid var(--line);border-radius:5px;padding:4px 7px}
+  .repo a{font-family:var(--mono);font-size:11.5px;color:var(--accent2);text-decoration:none;word-break:break-all}
+  .gh-list{list-style:none;border-top:1px solid var(--line)}
+  .gh-list li{padding:10px 0 10px 20px;border-bottom:1px solid var(--line);font-size:13.5px;line-height:1.5;color:var(--muted);position:relative}
+  .gh-list li::before{content:"→";position:absolute;left:0;color:var(--accent);font-family:var(--mono);font-size:11px}
+  .gh-list strong{color:var(--ink);font-weight:600}
+
+  /* contacts */
+  .final{display:grid;grid-template-columns:1.15fr .85fr;gap:6vw;align-items:end}
+  .final h2{font-size:clamp(38px,5.4vw,72px)}
+  .final h2 em{font-style:normal;color:var(--accent)}
+  .final .lead{margin-top:22px}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px 30px;margin-top:8px}
+  .contact-grid .item{border-top:1px solid var(--line);padding-top:12px}
+  .contact-grid .label{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .contact-grid a,.contact-grid span{display:block;margin-top:7px;color:var(--ink);font-size:14px;text-decoration:none;word-break:break-word}
+  .contact-grid a:hover{color:var(--accent)}
+  .place{margin-top:30px;font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.06em}
+
+  /* navigation */
+  .dots{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:6;display:flex;gap:8px}
+  .dots button{
+    width:8px;height:8px;border-radius:999px;border:0;padding:0;cursor:pointer;
+    background:rgba(255,255,255,.2);transition:width .3s,background .3s;
+  }
+  .dots button:hover{background:rgba(255,255,255,.4)}
+  .dots button.on{width:26px;background:var(--accent)}
+  .progress{position:fixed;left:0;right:0;bottom:0;height:2px;background:rgba(255,255,255,.06);z-index:6}
+  .progress i{display:block;height:100%;width:12.5%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .45s cubic-bezier(.2,.75,.2,1)}
+  .hint{
+    position:fixed;right:34px;bottom:18px;z-index:6;
+    font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:rgba(255,255,255,.32);
+  }
+
+  @media screen and (max-width:900px){
+    .slide{padding:64px 22px 70px}
+    .job,.gh,.final{grid-template-columns:1fr;gap:26px}
+    .stats{grid-template-columns:1fr 1fr}
+    .stat{padding:20px 16px 18px 0}
+    .stat + .stat{padding-left:16px}
+    .stat:nth-child(2){border-right:0}
+    .stat:nth-child(3),.stat:nth-child(4){border-top:1px solid var(--line)}
+    .skill-grid{grid-template-columns:1fr}
+    .flow{grid-template-columns:1fr;border-top:0}
+    .step{padding:18px 0;border-right:0;border-bottom:1px solid var(--line)}
+    .step + .step{padding-left:0}
+    .step p{min-height:0}
+    .step .result{margin-top:10px;padding-top:10px;border-top:0}
+    .contact-row{gap:14px;margin-top:34px}
+    .hint{display:none}
+    .cover-mark{display:none}
+    .final{grid-template-columns:1fr;align-items:start}
+  }
+
+  @media print{
+    @page{size:A4 landscape;margin:0}
+    :root{--bg:#fff;--ink:#101418;--muted:#4c5560;--line:#d9dee4;--accent:#3f6b00;--accent2:#00607d}
+    html,body{overflow:visible;height:auto;background:#fff}
+    body::before,.topbar,.dots,.hint,.progress,.cover-mark{display:none!important}
+    .slide{
+      position:relative;inset:auto;visibility:visible;opacity:1;transform:none;
+      height:100vh;padding:34px 46px;page-break-after:always;break-after:page;background:#fff;
+    }
+    .slide-inner{zoom:.84;animation:none!important}
+    .cover h1{font-size:clamp(54px,8vw,104px)}
+    .repo{background:#f5f7f9}
+    .tag,.chip{background:#fff}
+    .points li::before,.kicker::before{print-color-adjust:exact}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div><b>Даниил Смирнов</b><span class="sep">/</span>Automation QA</div>
+  <div><span id="counter">01 / 08</span></div>
+</header>
+
+<main id="deck">
+
+  <section class="slide cover is-active">
+    <div class="slide-inner">
+      <p class="kicker">Senior Automation QA · Python / TypeScript / Playwright</p>
+      <h1>Даниил<br><span>Смирнов</span></h1>
+      <p class="lead">Строю автоматизацию тестирования с нуля: архитектура фреймворка, команда, CI/CD и AI-инструменты. <b>UI, API и backend — в одном контуре качества.</b></p>
+      <div class="chips">
+        <span class="chip">5 лет 9 месяцев опыта</span>
+        <span class="chip">2 отдела с нуля</span>
+        <span class="chip">10 000+ автотестов</span>
+        <span class="chip">AI-assisted QA</span>
+      </div>
+      <div class="contact-row">
+        <a href="https://github.com/Mirtalll" target="_blank" rel="noreferrer">github.com/Mirtalll</a>
+        <a href="https://t.me/MirtlPLQA" target="_blank" rel="noreferrer">@MirtlPLQA</a>
+        <a href="mailto:danu.qaam@gmail.com">danu.qaam@gmail.com</a>
+        <span>+7 (995) 167-83-85</span>
+      </div>
+    </div>
+    <div class="cover-mark" aria-hidden="true">AQA</div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="kicker">Обо мне</p>
+      <h2>Автоматизация, команда и AI —<br>от первого теста до продакшена</h2>
+      <div class="stats">
+        <div class="stat"><b>5,9</b><span>лет в автоматизации тестирования</span></div>
+        <div class="stat"><b>2</b><span>отдела автоматизации, построенных с нуля</span></div>
+        <div class="stat"><b>10 000+</b><span>автотестов в поддержке: UI, API, mocks, backend</span></div>
+        <div class="stat"><b>×3–4</b><span>скорость написания тестов после внедрения LLM</span></div>
+      </div>
+      <div class="note">
+        <span class="label">Позиция</span>
+        <p>Вижу себя <b>SDET-автоматизатором</b>: использую AI в работе и обучаю других. Образование — Техникум им. Ф.В. Чижова: информационные технологии, прикладная математика и информатика.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-inner job">
+      <div class="job-meta">
+        <p class="kicker">Опыт · 01</p>
+        <h2 class="company">CRT</h2>
+        <p class="role">Senior Automation QA</p>
+        <p class="period"><b>мар 2024 — сен 2026</b>2 года 7 месяцев</p>
+        <p class="projects">Система мониторинга недропользования<br>«Управление производством» (Сибгео)</p>
+      </div>
+      <ul class="points">
+        <li><strong>Архитектура и фреймворк.</strong> Масштабируемое решение на Playwright и Cypress (TS/JS), паттерн Page Factory (Component / Fragment / Page). Единый NPM-пакет UI + API-тестирования для всех проектов компании.</li>
+        <li><strong>Backend-автоматизация.</strong> Автотесты бэкенд-сервисов на pytest и requests, интеграция в общие CI/CD-пайплайны; покрытие критических микросервисов и интеграционных сценариев.</li>
+        <li><strong>Команда.</strong> Сформировал отдел автоматизации из 4 человек: собеседования, онбординг, менторство, code review.</li>
+        <li><strong>Масштаб.</strong> Поддержка базы 10 000+ автотестов (UI, API, mocks, backend) и стабильность на 3 крупных проектах.</li>
+        <li><strong>AI-интеграция.</strong> Внедрил Cursor и правила для LLM: генерация Page Objects и локаторов, единый стиль кода. Рост с 10 до 30–40 тестов в неделю на человека.</li>
+        <li><strong>CI/CD и отчётность.</strong> Пайплайны, Telegram-отчёты, Allure Server.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-inner job">
+      <div class="job-meta">
+        <p class="kicker">Опыт · 02</p>
+        <h2 class="company">МЕДИАСЕТЬ</h2>
+        <p class="role">Fullstack QA</p>
+        <p class="period"><b>янв 2021 — авг 2022</b>1 год 8 месяцев · Москва</p>
+        <p class="projects">«Медиасеть.Маркет»<br>Экосистема управления продажами на маркетплейсах · B2B/B2C</p>
+      </div>
+      <ul class="points">
+        <li><strong>Запуск с нуля.</strong> Самостоятельно выбрал стек Playwright + JavaScript и спроектировал архитектуру фреймворка; универсальная обёртка для UI- и API-тестов на все проекты компании.</li>
+        <li><strong>Тестовое покрытие.</strong> Создал и поддерживал 1000+ регрессионных автотестов на двух проектах; автоматизировал 60% ручной регрессии.</li>
+        <li><strong>Quality Gates.</strong> Настроил блокировку релиза при падении критических тестов и встроил автотесты в релизный процесс.</li>
+        <li><strong>Отчётность.</strong> Кастомный Telegram Bot для уведомления команд и интеграция с Allure Server.</li>
+        <li><strong>Команда и стандарты.</strong> Построил отдел из 3 человек, проводил технические интервью, обучал написанию поддерживаемых тестов.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="kicker">Стек</p>
+      <h2>Чем закрываю задачи</h2>
+      <div class="skill-grid">
+        <div class="skill-group">
+          <h3>Языки и запросы</h3>
+          <div class="tags">
+            <span class="tag">Python</span>
+            <span class="tag">JavaScript</span>
+            <span class="tag">TypeScript</span>
+            <span class="tag">SQL</span>
+            <span class="tag">PostgreSQL</span>
+            <span class="tag">REST API</span>
+            <span class="tag">JSON Schema</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h3>Тестирование</h3>
+          <div class="tags">
+            <span class="tag">Playwright</span>
+            <span class="tag">pytest</span>
+            <span class="tag">Cypress</span>
+            <span class="tag">requests</span>
+            <span class="tag">Postman</span>
+            <span class="tag">API-моки</span>
+            <span class="tag">регрессия</span>
+            <span class="tag">тест-кейсы</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h3>Инфраструктура</h3>
+          <div class="tags">
+            <span class="tag">Git</span>
+            <span class="tag">GitLab CI</span>
+            <span class="tag">GitHub Actions</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Allure Server</span>
+            <span class="tag">Grafana</span>
+            <span class="tag">Sentry</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h3>Процессы</h3>
+          <div class="tags">
+            <span class="tag">Page Object / Page Factory</span>
+            <span class="tag">Code Review</span>
+            <span class="tag">Quality Gates</span>
+            <span class="tag">Agile</span>
+            <span class="tag">Jira</span>
+            <span class="tag">менторство</span>
+            <span class="tag">AI / LLM</span>
+          </div>
+        </div>
+      </div>
+      <p class="skill-foot">// Основной фокус: Python · TypeScript · Playwright · CI/CD</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="kicker">Подход</p>
+      <h2>Как я работаю</h2>
+      <div class="flow">
+        <article class="step">
+          <span class="num"><b>01</b> Архитектура</span>
+          <h3>Проектирую фреймворк</h3>
+          <p>Playwright и Cypress, Page Factory и единый NPM-пакет UI + API для всех проектов компании.</p>
+          <div class="result">1 пакет · все проекты</div>
+        </article>
+        <article class="step">
+          <span class="num"><b>02</b> Автоматизация</span>
+          <h3>Закрываю UI, API и backend</h3>
+          <p>pytest, requests, моки; 10 000+ автотестов на трёх крупных проектах.</p>
+          <div class="result">10 000+ тестов</div>
+        </article>
+        <article class="step">
+          <span class="num"><b>03</b> Процесс</span>
+          <h3>Встраиваю в CI/CD</h3>
+          <p>Пайплайны, Quality Gates, Allure Server и Telegram-отчёты — тесты работают на релиз.</p>
+          <div class="result">CI/CD · Quality Gates</div>
+        </article>
+        <article class="step">
+          <span class="num"><b>04</b> Команда + AI</span>
+          <h3>Ускоряю команду</h3>
+          <p>Cursor и LLM для Page Objects и локаторов; найм, менторство и code review. Два отдела с нуля — 4 и 3 человека.</p>
+          <div class="result">10 → 30–40 тестов/нед</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="kicker">Открытый код</p>
+      <h2>GitHub</h2>
+      <div class="gh">
+        <div class="repo">
+          <div class="repo-head"><span class="dot"></span><a href="https://github.com/Mirtalll/pw-start-automation" target="_blank" rel="noreferrer"><b>Mirtalll</b>&nbsp;/&nbsp;pw-start-automation</a></div>
+          <p>Стартовый фреймворк E2E-автоматизации на Playwright + TypeScript: архитектура Page → Fragment → Component, Allure-отчётность и API-моки.</p>
+          <div class="repo-meta">
+            <span>TypeScript</span><span>Playwright 1.58</span><span>v1.0.0</span><span>GitHub Actions</span>
+          </div>
+        </div>
+        <ul class="gh-list">
+          <li><strong>Page → Fragment → Component:</strong> селекторы живут в объектах, а не в тестах.</li>
+          <li><strong>19 Allure-матчеров:</strong> каждое действие и проверка — отдельный понятный шаг.</li>
+          <li><strong>ApiMock:</strong> подмена XHR/fetch с автоматическим сбросом после теста.</li>
+          <li><strong>7 ESLint-правил:</strong> линтер проверяет саму архитектуру фреймворка.</li>
+          <li><strong>Cursor-навыки:</strong> 7 правил для AI-генерации кода в едином стиле.</li>
+          <li><strong>CI:</strong> типы, линт, E2E-тесты и артефакты Allure при падении.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-inner final">
+      <div>
+        <p class="kicker">Контакты</p>
+        <h2>Давайте обсудим<br><em>автоматизацию</em></h2>
+        <p class="lead">Открыт к роли <b>Senior Automation QA / SDET</b>.<br>Москва · удалённо · готов к командировкам.</p>
+        <p class="place">Спасибо за внимание</p>
+      </div>
+      <div class="contact-grid">
+        <div class="item"><span class="label">Телефон</span><a href="tel:+79951678385">+7 (995) 167-83-85</a></div>
+        <div class="item"><span class="label">Email</span><a href="mailto:danu.qaam@gmail.com">danu.qaam@gmail.com</a></div>
+        <div class="item"><span class="label">Telegram</span><a href="https://t.me/MirtlPLQA" target="_blank" rel="noreferrer">@MirtlPLQA</a><a href="https://t.me/Mrtshaini" target="_blank" rel="noreferrer">@Mrtshaini</a></div>
+        <div class="item"><span class="label">GitHub</span><a href="https://github.com/Mirtalll" target="_blank" rel="noreferrer">github.com/Mirtalll</a></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<nav class="dots" id="dots" aria-label="Слайды"></nav>
+<div class="progress"><i id="bar"></i></div>
+<p class="hint">← → листать · F на весь экран · Ctrl+P в PDF</p>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const dots = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const bar = document.getElementById('bar');
+  let current = 0;
+
+  slides.forEach((slide, i) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Слайд ' + (i + 1));
+    btn.addEventListener('click', () => go(i));
+    dots.append(btn);
+  });
+
+  function go(n) {
+    current = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((slide, i) => slide.classList.toggle('is-active', i === current));
+    [...dots.children].forEach((dot, i) => dot.classList.toggle('on', i === current));
+    counter.textContent = String(current + 1).padStart(2, '0') + ' / ' + String(slides.length).padStart(2, '0');
+    bar.style.width = ((current + 1) / slides.length * 100) + '%';
+    history.replaceState(null, '', current ? '#' + (current + 1) : location.pathname);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) {
+      e.preventDefault();
+      go(current + 1);
+    } else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) {
+      e.preventDefault();
+      go(current - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      go(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      go(slides.length - 1);
+    } else if (e.key === 'f' || e.key === 'F') {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen();
+    }
+  });
+
+  const fromHash = parseInt(location.hash.slice(1), 10);
+  go(Number.isFinite(fromHash) ? fromHash - 1 : 0);
+</script>
+</body>
+</html>
